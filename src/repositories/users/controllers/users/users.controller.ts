@@ -14,10 +14,8 @@ import {
 import { SkipJwtCheck } from '../../../../decorators/skip-jwt-check.decorator';
 import { UsersService } from '../../services/users.service';
 import { UserDocument } from '../../schemas/user.schema';
-import { Roles } from '../../../../decorators/roles.decorator';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { UserInterface } from '../../../../interfaces/user.interface';
-import { RoleEnum } from '../../../../roles/roles.enum';
 
 @Controller()
 export class UsersController {
@@ -25,8 +23,8 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Req() req) {
-    return req.user;
+  async getProfile(@Req() req): Promise<string> {
+    return btoa(JSON.stringify(req.user));
   }
 
   @Get('email/:email')
@@ -46,6 +44,7 @@ export class UsersController {
     return userDocument;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('uuid/:uuid')
   async getByUUID(@Param() uuid: { uuid: string }): Promise<UserDocument> {
     const userDocument = await this.usersService.findByUUID(uuid.uuid);
@@ -82,10 +81,10 @@ export class UsersController {
     }
   }
 
-  @HttpCode(200)
-  @Post('remove-user')
-  @Roles(RoleEnum.Admin)
-  addRole(@Body() uuid: { uuid: string }): any {
-    return uuid;
-  }
+  // @HttpCode(200)
+  // @Post('remove-user')
+  // @Roles(RoleEnum.Admin)
+  // addRole(@Body() uuid: { uuid: string }): any {
+  //   return uuid;
+  // }
 }

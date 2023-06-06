@@ -40,12 +40,9 @@ export class AuthService {
   async login(
     loginPayload: AuthTokenRequestPayloadInterface,
   ): Promise<AuthTokensInterface> {
-    const { userName, sub } = loginPayload.user;
-    const payload = { userName, sub };
-
     return {
-      accessToken: this.jwtService.sign(payload),
-      refreshToken: await this.generateRefreshToken(sub),
+      accessToken: this.jwtService.sign(loginPayload.user),
+      refreshToken: await this.generateRefreshToken(loginPayload.user.uuid),
     };
   }
 

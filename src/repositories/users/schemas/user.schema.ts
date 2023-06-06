@@ -5,8 +5,6 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({ type: String, maxlength: 50 })
-  userName: string;
 
   @Prop({ type: String, maxlength: 50 })
   firstName: string;
@@ -14,41 +12,20 @@ export class User {
   @Prop({ type: String, maxlength: 50 })
   lastName: string;
 
+  @Prop({ type: String })
+  avatarSrc: string;
+
+  @Prop({ type: String, maxlength: 50 })
+  subdomain: string;
+
   @Prop({ type: String, maxlength: 250 })
-  shortBio: string;
-
-  @Prop(
-    raw({
-      name: { type: String },
-      path: { type: String },
-    }),
-  )
-  avatar: Record<string, any>;
-
-  @Prop(
-    raw({
-      url: { type: String },
-      prefix: { type: String },
-    }),
-  )
-  accountUrl: Record<string, any>;
+  bio: string;
 
   @Prop({ type: String, required: true, unique: true })
   email: string;
 
   @Prop({ type: String, required: true })
   password: string;
-
-  @Prop(
-    raw({
-      country: { type: String },
-      city: { type: String },
-    }),
-  )
-  from: Record<string, any>;
-
-  @Prop({ type: [String], required: true })
-  roles: string[];
 
   @Prop({ type: String, required: true, unique: true })
   uuid: string;

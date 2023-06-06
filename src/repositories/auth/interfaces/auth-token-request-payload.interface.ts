@@ -1,6 +1,6 @@
 export interface AuthTokenRequestPayloadInterface {
   user: {
-    sub: string;
-    userName: string;
+    uuid: string;
+    email: string;
   },
 }

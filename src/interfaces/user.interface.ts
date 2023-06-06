@@ -1,25 +1,13 @@
 export interface UserInterface {
-  userName?: string;
+  _id?: string;
+  uuid?: string;
   firstName?: string;
   lastName?: string;
-  shortBio?: string;
-  avatar?: {
-    alt: string;
-    path: string;
-  };
-  accountUrl?: {
-    url: string;
-    prefix: string;
-  };
+  avatarSrc?: string;
+  subdomain?: string;
+  bio?: string;
   email?: string;
   password?: string;
-  from?: {
-    country?: string;
-    city?: string;
-  };
-  roles?: string[];
-  uuid?: string;
-  _id?: string;
   refreshToken?: string;
   refreshTokenExpiresIn?: Date;
 }

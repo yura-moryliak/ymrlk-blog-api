@@ -33,7 +33,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
     payload: AuthValidationPayloadInterface,
   ): Promise<AuthValidationPayloadInterface> {
     const userDocument: UserDocument = await this.usersService.findByUUID(
-      payload.sub,
+      payload.uuid,
     );
 
     if (!userDocument) {
@@ -51,6 +51,6 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
       throw new UnauthorizedException('Refresh token expired');
     }
 
-    return { sub: payload.sub, userName: userDocument.userName };
+    return { uuid: payload.uuid, email: userDocument.email };
   }
 }

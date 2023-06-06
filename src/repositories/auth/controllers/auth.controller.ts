@@ -7,6 +7,7 @@ import { AuthTokenRequestPayloadInterface } from '../interfaces/auth-token-reque
 import { JwtRefreshAuthGuard } from '../guards/jwt-refresh-auth.guard';
 import { SkipJwtCheck } from '../../../decorators/skip-jwt-check.decorator';
 import { UserInterface } from '../../../interfaces/user.interface';
+import { AuthTokensInterface } from '../interfaces/auth-tokens.interface';
 
 @Controller()
 export class AuthController {
@@ -16,9 +17,9 @@ export class AuthController {
   @SkipJwtCheck()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() request: any) {
-    const { userName, uuid } = request.user._doc as UserInterface;
-    return this.authService.login({ user: { userName, sub: uuid } });
+  async login(@Request() request: any): Promise<AuthTokensInterface> {
+    const { email, uuid } = request.user._doc as UserInterface;
+    return this.authService.login({ user: { email, uuid: uuid } });
   }
 
   @HttpCode(200)
