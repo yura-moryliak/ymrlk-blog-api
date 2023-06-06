@@ -23,8 +23,8 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Req() req): Promise<string> {
-    return btoa(JSON.stringify(req.user));
+  async getProfile(@Req() req): Promise<any> {
+    return req.user;
   }
 
   @Get('email/:email')
