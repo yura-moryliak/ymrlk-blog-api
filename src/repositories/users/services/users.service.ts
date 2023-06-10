@@ -40,6 +40,10 @@ export class UsersService {
     const foundUserDocument = await this.userModel
       .findOne({ uuid })
       .select('-password')
+      .select('-_id')
+      .select('-__v')
+      .select('-refreshToken')
+      .select('-refreshTokenExpiresIn')
       .exec();
 
     if (!foundUserDocument) {
