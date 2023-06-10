@@ -35,7 +35,7 @@ export class UsersController {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: `User with ${email.email} email was not found`,
+          message: `User with ${email.email} email was not found`,
         },
         HttpStatus.NOT_FOUND,
       );
@@ -53,7 +53,7 @@ export class UsersController {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: `User with ${uuid.uuid} was not found`,
+          message: `User with ${uuid.uuid} was not found`,
         },
         HttpStatus.NOT_FOUND,
       );
@@ -74,7 +74,7 @@ export class UsersController {
       throw new HttpException(
         {
           status: HttpStatus.BAD_REQUEST,
-          error: 'User already exist',
+          message: 'User already exist',
         },
         HttpStatus.BAD_REQUEST,
       );
