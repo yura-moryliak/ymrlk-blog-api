@@ -12,13 +12,13 @@ export class User {
   @Prop({ type: String, maxlength: 50 })
   lastName: string;
 
-  @Prop({ type: String })
+  @Prop({ type: String, default: '' })
   avatarSrc: string;
 
-  @Prop({ type: String, maxlength: 50 })
+  @Prop({ type: String, maxlength: 50, default: '' })
   subdomain: string;
 
-  @Prop({ type: String, maxlength: 250 })
+  @Prop({ type: String, maxlength: 250, default: '' })
   bio: string;
 
   @Prop({ type: String, required: true, unique: true })
