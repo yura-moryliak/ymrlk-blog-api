@@ -6,9 +6,9 @@ import {
   HttpException,
   HttpStatus,
   Param,
-  Post,
+  Post, Put,
   Req,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 
 import { SkipJwtCheck } from '../../../../decorators/skip-jwt-check.decorator';
@@ -79,6 +79,15 @@ export class UsersController {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Put('profile/update')
+  async updateProfile(
+    @Body() body: { uuid: string; model: Partial<UserInterface> },
+  ): Promise<UserDocument> {
+    return this.usersService.updateProfile(body);
   }
 
   // @HttpCode(200)

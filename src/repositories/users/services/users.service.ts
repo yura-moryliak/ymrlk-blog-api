@@ -77,6 +77,20 @@ export class UsersService {
     );
   }
 
+  async updateProfile(body: {
+    uuid: string;
+    model: Partial<UserInterface>;
+  }): Promise<UserDocument> {
+    const result = await this.userModel.findOneAndUpdate({ uuid: body.uuid }, { ...body.model }, { new: true })
+      .select('-password')
+      .select('-_id')
+      .select('-__v')
+      .select('-refreshToken')
+      .select('-refreshTokenExpiresIn');
+
+    return result as UserDocument;
+  }
+
   private async getCreatedDocument(model): Promise<any> {
     const modelCopy = {
       ...model,
