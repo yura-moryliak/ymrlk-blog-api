@@ -22,7 +22,19 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    origin: configServiceRef.get(ENV_CONFIGS.CORS_ORIGIN),
+    origin: (requestOrigin, callback) => {
+
+      const whiteList: string[] = [
+        configServiceRef.get(ENV_CONFIGS.CORS_ORIGIN),
+        configServiceRef.get(ENV_CONFIGS.DEV_SSR_CORS),
+      ];
+
+      if (!requestOrigin || whiteList.indexOf(requestOrigin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   });

@@ -1,6 +1,7 @@
 export interface ConfigurationInterface {
   GLOBAL_API: string;
   CORS_ORIGIN: string;
+  DEV_SSR_CORS: string;
   MONGODB_CONNECTION_STRING: string;
   MONGODB_DATABASE_NAME: string;
   MONGODB_RETRY_ATTEMPTS: string;
@@ -18,6 +19,7 @@ export interface ConfigurationInterface {
 export const ENV_CONFIGS: ConfigurationInterface = {
   GLOBAL_API: 'GLOBAL_API',
   CORS_ORIGIN: 'CORS_ORIGIN',
+  DEV_SSR_CORS: 'DEV_SSR_CORS',
   MONGODB_CONNECTION_STRING: 'MONGODB_CONNECTION_STRING',
   MONGODB_DATABASE_NAME: 'MONGODB_DATABASE_NAME',
   MONGODB_RETRY_ATTEMPTS: 'MONGODB_RETRY_ATTEMPTS',
