@@ -91,6 +91,20 @@ export class UsersService {
     return result as UserDocument;
   }
 
+  async updateProfileAvatarPath(
+    uuid: string,
+    avatarSrc: string,
+  ): Promise<UserDocument> {
+    const result = await this.userModel.findOneAndUpdate({ uuid: uuid }, {avatarSrc}, { new: true })
+      .select('-password')
+      .select('-_id')
+      .select('-__v')
+      .select('-refreshToken')
+      .select('-refreshTokenExpiresIn');
+
+    return result as UserDocument;
+  }
+
   private async getCreatedDocument(model): Promise<any> {
     const modelCopy = {
       ...model,

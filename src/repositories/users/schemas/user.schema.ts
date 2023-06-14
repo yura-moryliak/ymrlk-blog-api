@@ -21,6 +21,9 @@ export class User {
   @Prop({ type: String, maxlength: 250, default: '' })
   bio: string;
 
+  @Prop({ type: String, default: '' })
+  location: string;
+
   @Prop({ type: String, required: true, unique: true })
   email: string;
 
