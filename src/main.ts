@@ -18,7 +18,11 @@ async function bootstrap() {
 
   app.setGlobalPrefix(configServiceRef.get(ENV_CONFIGS.GLOBAL_API));
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
   app.use(cookieParser());
 
   app.enableCors({

@@ -6,6 +6,7 @@ export interface UserInterface {
   avatarSrc?: string;
   subdomain?: string;
   bio?: string;
+  socialProfiles?: Array<{ title: string; url: string }>;
   email?: string;
   password?: string;
   refreshToken?: string;

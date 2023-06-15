@@ -5,7 +5,6 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-
   @Prop({ type: String, maxlength: 50 })
   firstName: string;
 
@@ -21,11 +20,22 @@ export class User {
   @Prop({ type: String, maxlength: 250, default: '' })
   bio: string;
 
+  @Prop({ type: String, default: '' })
+  location: string;
+
   @Prop({ type: String, required: true, unique: true })
   email: string;
 
   @Prop({ type: String, required: true })
   password: string;
+
+  @Prop([
+    {
+      title: { type: String, default: '' },
+      url: { type: String, default: '' },
+    },
+  ])
+  socialProfiles: Array<{ title: string, url: string }>
 
   @Prop({ type: String, required: true, unique: true })
   uuid: string;

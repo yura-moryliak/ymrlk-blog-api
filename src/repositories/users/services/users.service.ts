@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 import { v1 as uuidv1 } from 'uuid';
 
 import { User, UserDocument } from '../schemas/user.schema';
@@ -89,6 +89,58 @@ export class UsersService {
       .select('-refreshTokenExpiresIn');
 
     return result as UserDocument;
+  }
+
+  async updateSocialProfiles(body: {
+    uuid: string;
+    model: Partial<UserInterface>;
+  }): Promise<UserDocument> {
+    const result = await this.userModel.findOneAndUpdate({ uuid: body.uuid }, { socialProfiles: body.model }, { new: true })
+      .select('-password')
+      .select('-_id')
+      .select('-__v')
+      .select('-refreshToken')
+      .select('-refreshTokenExpiresIn');
+
+    return result as UserDocument;
+  }
+
+  async updateProfileAvatarPath(
+    uuid: string,
+    avatarSrc: string,
+  ): Promise<UserDocument> {
+    const result = await this.userModel.findOneAndUpdate({ uuid: uuid }, {avatarSrc}, { new: true })
+      .select('-password')
+      .select('-_id')
+      .select('-__v')
+      .select('-refreshToken')
+      .select('-refreshTokenExpiresIn');
+
+    return result as UserDocument;
+  }
+
+  async changePassword(body: {
+    uuid: string;
+    oldPassword: string;
+    newPassword: string;
+  }): Promise<boolean> {
+    const user: UserDocument = await this.userModel.findOne({
+      uuid: body.uuid,
+    });
+
+    const passwordsMatch = await compare(body.oldPassword, user.password);
+
+    if (!passwordsMatch) {
+      return false;
+    }
+
+    const updatedResult = await this.userModel.findOneAndUpdate(
+      { uuid: body.uuid },
+      { password: await this.hashPassword(body.newPassword) },
+      { new: true },
+    );
+
+    return !!updatedResult;
   }
 
   private async getCreatedDocument(model): Promise<any> {

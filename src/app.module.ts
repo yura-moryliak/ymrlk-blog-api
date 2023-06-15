@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD, RouterModule } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
+import { join } from 'path';
 
 import { MongooseModule } from '@nestjs/mongoose';
 
@@ -30,6 +33,13 @@ import { routes } from './routes';
       imports: [ConfigModule],
       useFactory: throttlerConfigFactory,
       inject: [ConfigService],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '/uploads'),
+      serveRoot: '/uploads/',
+      serveStaticOptions: {
+        index: false,
+      },
     }),
     RouterModule.register(routes),
     AuthModule,
