@@ -36,18 +36,25 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
       payload.uuid,
     );
 
+    const refreshToken: string = (await userDocument).refreshToken;
+    const refreshTokenExpiresIn: string = (await userDocument).refreshTokenExpiresIn;
+
     if (!userDocument) {
       throw new UnauthorizedException('No refresh token found');
     }
 
     if (
-      (request.body as UserInterface).refreshToken !=
-      (await userDocument).refreshToken
+      refreshToken &&
+      (request.body as UserInterface).refreshToken != refreshToken
     ) {
+      console.log(
+        (request.body as UserInterface).refreshToken,
+        refreshToken,
+      );
       throw new UnauthorizedException('Refresh token does not matched');
     }
 
-    if (new Date() > new Date((await userDocument).refreshTokenExpiresIn)) {
+    if (new Date() > new Date(refreshTokenExpiresIn)) {
       throw new UnauthorizedException('Refresh token expired');
     }
 

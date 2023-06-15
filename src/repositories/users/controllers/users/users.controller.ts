@@ -104,11 +104,19 @@ export class UsersController {
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
+  @Put('profile/update-social-profiles')
+  async updateSocialProfile(
+    @Body() body: { uuid: string; model: Partial<UserInterface> },
+  ): Promise<UserDocument> {
+    return this.usersService.updateSocialProfiles(body);
+  }
+
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
   @Post('profile/upload-avatar')
   @UseInterceptors(
     // TODO Technical afford
     // TODO Provide here rewrite file to avoid new image files creation
-
     FileInterceptor('avatar', {
       storage: diskStorage({
         destination: './uploads',
@@ -130,11 +138,9 @@ export class UsersController {
   }
 
   @HttpCode(200)
-  @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Post('profile/delete-avatar')
   async deleteProfileAvatar(@Body() body: { uuid: string, fileName: string }): Promise<UserDocument> {
-
     const files: string[] = fs.readdirSync('uploads');
 
     if (files.includes(body.fileName)) {
@@ -142,6 +148,13 @@ export class UsersController {
     }
 
     return this.uploadProfileAvatar(null, { uuid: body.uuid });
+  }
+
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  @Put('profile/change-password')
+  async changeUserPassword(@Body() body: { uuid: string, oldPassword: string, newPassword: string }): Promise<boolean> {
+    return this.usersService.changePassword(body);
   }
 
   // @HttpCode(200)
