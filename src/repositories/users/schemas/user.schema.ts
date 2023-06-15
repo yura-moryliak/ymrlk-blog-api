@@ -32,10 +32,10 @@ export class User {
   @Prop([
     {
       title: { type: String, default: '' },
-      link: { type: String, default: '' },
+      url: { type: String, default: '' },
     },
   ])
-  socialProfiles: Array<{ title: string, link: string }>
+  socialProfiles: Array<{ title: string, url: string }>
 
   @Prop({ type: String, required: true, unique: true })
   uuid: string;
