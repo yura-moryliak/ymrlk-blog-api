@@ -3,7 +3,7 @@ export interface UserInterface {
   uuid?: string;
   firstName?: string;
   lastName?: string;
-  avatarSrc?: string;
+  avatar?: { originalName: string; url: string };
   subdomain?: string;
   bio?: string;
   socialProfiles?: Array<{ title: string; url: string }>;

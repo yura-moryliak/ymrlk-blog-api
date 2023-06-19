@@ -27,7 +27,6 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (requestOrigin, callback) => {
-
       const whiteList: string[] = [
         configServiceRef.get(ENV_CONFIGS.CORS_ORIGIN),
         configServiceRef.get(ENV_CONFIGS.DEV_SSR_CORS),

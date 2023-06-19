@@ -81,7 +81,8 @@ export class UsersService {
     uuid: string;
     model: Partial<UserInterface>;
   }): Promise<UserDocument> {
-    const result = await this.userModel.findOneAndUpdate({ uuid: body.uuid }, { ...body.model }, { new: true })
+    const result = await this.userModel
+      .findOneAndUpdate({ uuid: body.uuid }, { ...body.model }, { new: true })
       .select('-password')
       .select('-_id')
       .select('-__v')
@@ -95,7 +96,12 @@ export class UsersService {
     uuid: string;
     model: Partial<UserInterface>;
   }): Promise<UserDocument> {
-    const result = await this.userModel.findOneAndUpdate({ uuid: body.uuid }, { socialProfiles: body.model }, { new: true })
+    const result = await this.userModel
+      .findOneAndUpdate(
+        { uuid: body.uuid },
+        { socialProfiles: body.model },
+        { new: true },
+      )
       .select('-password')
       .select('-_id')
       .select('-__v')
@@ -109,7 +115,8 @@ export class UsersService {
     uuid: string,
     avatarSrc: string,
   ): Promise<UserDocument> {
-    const result = await this.userModel.findOneAndUpdate({ uuid: uuid }, {avatarSrc}, { new: true })
+    const result = await this.userModel
+      .findOneAndUpdate({ uuid: uuid }, { avatarSrc }, { new: true })
       .select('-password')
       .select('-_id')
       .select('-__v')

@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Req,
+  Request,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -16,8 +17,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 
-import { diskStorage } from 'multer';
+import { request } from 'express';
 import * as fs from 'fs';
+import * as path from 'path';
 
 import { SkipJwtCheck } from '../../../../decorators/skip-jwt-check.decorator';
 import { UsersService } from '../../services/users.service';
@@ -25,6 +27,7 @@ import { UserDocument } from '../../schemas/user.schema';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { UserInterface } from '../../../../interfaces/user.interface';
 import { ENV_CONFIGS } from '../../../../configs/configuration';
+import { avatarMulterOptions } from '../../../../helpers/avatar-multer-options';
 
 @Controller()
 export class UsersController {
@@ -114,46 +117,48 @@ export class UsersController {
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Post('profile/upload-avatar')
-  @UseInterceptors(
-    // TODO Technical afford
-    // TODO Provide here rewrite file to avoid new image files creation
-    FileInterceptor('avatar', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename(
-          req: any,
-          file: Express.Multer.File,
-          callback: (error: Error | null, filename: string) => void,
-        ): void {
-          const extension = file.originalname.split('.').pop();
-          callback(null, `${Date.now()}.${extension}`);
-        },
-      }),
-      limits: { fileSize: 3000000 },
-    }),
-  )
-  async uploadProfileAvatar(@UploadedFile() file: Express.Multer.File, @Body() body: { uuid: string }): Promise<UserDocument> {
-    const avatarSrc = file ? `${this.configService.get(ENV_CONFIGS.BASE_URL)}/uploads/${file.filename}` : '';
+  @UseInterceptors(FileInterceptor('avatar', avatarMulterOptions))
+  async uploadProfileAvatar(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() request: any,
+    @Body() body: { uuid: string },
+  ): Promise<UserDocument> {
+    const avatarSrc = file
+      ? `${this.configService.get(ENV_CONFIGS.BASE_URL)}/uploads/avatars/${
+          request['user'].uuid
+        }/${file.filename}`
+      : '';
     return this.usersService.updateProfileAvatarPath(body.uuid, avatarSrc);
   }
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Post('profile/delete-avatar')
-  async deleteProfileAvatar(@Body() body: { uuid: string, fileName: string }): Promise<UserDocument> {
-    const files: string[] = fs.readdirSync('uploads');
+  async deleteProfileAvatar(
+    @Body() body: { uuid: string; fileName: string },
+    @Request() req: any,
+  ): Promise<UserDocument> {
+    const dirPath = path.join(
+      __dirname,
+      '../../../../../',
+      `uploads/avatars/${req['user'].uuid}`,
+    );
+
+    const files: string[] = fs.readdirSync(dirPath);
 
     if (files.includes(body.fileName)) {
-      fs.unlinkSync(`uploads/${body.fileName}`);
+      fs.unlinkSync(path.join(dirPath, body.fileName));
     }
 
-    return this.uploadProfileAvatar(null, { uuid: body.uuid });
+    return this.uploadProfileAvatar(null, request, { uuid: body.uuid });
   }
 
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
   @Put('profile/change-password')
-  async changeUserPassword(@Body() body: { uuid: string, oldPassword: string, newPassword: string }): Promise<boolean> {
+  async changeUserPassword(
+    @Body() body: { uuid: string; oldPassword: string; newPassword: string },
+  ): Promise<boolean> {
     return this.usersService.changePassword(body);
   }
 
