@@ -35,7 +35,7 @@ export class User {
       url: { type: String, default: '' },
     },
   ])
-  socialProfiles: Array<{ title: string, url: string }>
+  socialProfiles: Array<{ title: string; url: string }>;
 
   @Prop({ type: String, required: true, unique: true })
   uuid: string;
