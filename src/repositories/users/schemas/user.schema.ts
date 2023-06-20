@@ -37,6 +37,12 @@ export class User {
   ])
   socialProfiles: Array<{ title: string; url: string }>;
 
+  @Prop({ type: String, default: '' })
+  phoneNumber: string;
+
+  @Prop({ type: Date, default: Date.now })
+  joinedSince: Date;
+
   @Prop({ type: String, required: true, unique: true })
   uuid: string;
 

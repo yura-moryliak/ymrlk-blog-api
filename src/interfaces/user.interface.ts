@@ -11,4 +11,6 @@ export interface UserInterface {
   password?: string;
   refreshToken?: string;
   refreshTokenExpiresIn?: Date;
+  phoneNumber?: string;
+  joinedSince?: Date;
 }

@@ -53,6 +53,25 @@ export class UsersService {
     return foundUserDocument;
   }
 
+  async findByUUIDOrSubdomain(uuidOrSubdomain: string): Promise<UserDocument> {
+    const foundUserDocument = await this.userModel
+      .findOne({
+        $or: [{ uuid: uuidOrSubdomain }, { subdomain: uuidOrSubdomain }],
+      })
+      .select('-password')
+      .select('-_id')
+      .select('-__v')
+      .select('-refreshToken')
+      .select('-refreshTokenExpiresIn')
+      .exec();
+
+    if (!foundUserDocument) {
+      return null;
+    }
+
+    return foundUserDocument;
+  }
+
   async createOne(model: UserInterface): Promise<any> {
     const userExist = await this.findByEmail(model.email);
 
@@ -151,6 +170,7 @@ export class UsersService {
   }
 
   private async getCreatedDocument(model): Promise<any> {
+    model.subdomain = model.email.split('@')[0];
     const modelCopy = {
       ...model,
       password: await this.hashPassword(model.password),
