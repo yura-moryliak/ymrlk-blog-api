@@ -53,11 +53,9 @@ export class UsersService {
     return foundUserDocument;
   }
 
-  async findByUUIDOrSubdomain(uuidOrSubdomain: string): Promise<UserDocument> {
+  async findBySubdomain(subdomain: string): Promise<UserDocument> {
     const foundUserDocument = await this.userModel
-      .findOne({
-        $or: [{ uuid: uuidOrSubdomain }, { subdomain: uuidOrSubdomain }],
-      })
+      .findOne({ subdomain: subdomain })
       .select('-password')
       .select('-_id')
       .select('-__v')
