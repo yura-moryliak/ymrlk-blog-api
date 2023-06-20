@@ -79,15 +79,15 @@ export class UsersController {
 
   @HttpCode(200)
   @SkipJwtCheck()
-  @Get('public/:uuidOrSubdomain')
-  async getByUUIDOrSubdomain(@Param() param: { uuidOrSubdomain: string }): Promise<UserDocument> {
-    const userDocument: UserDocument = await this.usersService.findByUUIDOrSubdomain(param.uuidOrSubdomain);
+  @Get('public/:subdomain')
+  async getByUUIDOrSubdomain(@Param() param: { subdomain: string }): Promise<UserDocument> {
+    const userDocument: UserDocument = await this.usersService.findBySubdomain(param.subdomain);
 
     if (!userDocument) {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          message: `User with [${param.uuidOrSubdomain}] id or subdomain was not found`,
+          message: `User with [${param.subdomain}] id or subdomain was not found`,
         },
         HttpStatus.NOT_FOUND,
       );
