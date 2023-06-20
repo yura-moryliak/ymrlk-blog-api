@@ -62,13 +62,32 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('uuid/:uuid')
   async getByUUID(@Param() uuid: { uuid: string }): Promise<UserDocument> {
-    const userDocument = await this.usersService.findByUUID(uuid.uuid);
+    const userDocument: UserDocument = await this.usersService.findByUUID(uuid.uuid);
 
     if (!userDocument) {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
           message: `User with ${uuid.uuid} was not found`,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return userDocument;
+  }
+
+  @HttpCode(200)
+  @SkipJwtCheck()
+  @Get('public/:uuidOrSubdomain')
+  async getByUUIDOrSubdomain(@Param() param: { uuidOrSubdomain: string }): Promise<UserDocument> {
+    const userDocument: UserDocument = await this.usersService.findByUUIDOrSubdomain(param.uuidOrSubdomain);
+
+    if (!userDocument) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: `User with [${param.uuidOrSubdomain}] id or subdomain was not found`,
         },
         HttpStatus.NOT_FOUND,
       );
